@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wiki Nintendo</title>
+  <style>
+    /* Reset e estilo base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background: #fff;
+      color: #222;
+    }
+    a {
+      color: #e70012;
+      text-decoration: none;
+    }
+
+    /* Tela vermelha (intro) */
+    .intro-screen {
+      height: 100vh;
+      background: #e70012;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .logo {
+      width: 220px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+    }
+    .btn-conheca {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      padding: 12px 30px;
+      background: white;
+      color: #e70012;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+      font-weight: 600;
+    }
+    .btn-conheca:hover {
+      background: #f5f5f5;
+    }
+
+    /* Header só aparece ao scrollar */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(231, 0, 18, 0.95);
+      z-index: 999;
+      transform: translateY(-100%);
+      transition: transform 0.4s ease;
+    }
+    header.visible {
+      transform: translateY(0);
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 15px;
+    }
+    nav a {
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.1);
+      transition: 0.3s;
+    }
+    nav a:hover,
+    nav a.active {
+      background: white;
+      color: #e70012;
+    }
+
+    main {
+      padding-top: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Front Page */
+    .front-page {
+      text-align: center;
+      padding: 80px 20px 40px;
+      background: white;
+    }
+    .front-page img {
+      max-width: 600px;
+      width: 90%;
+      margin-bottom: 30px;
+      border-radius: 20px;
+    }
+    .front-page h2 {
+      font-size: 2.5rem;
+      color: #e70012;
+      margin-bottom: 20px;
+    }
+    .front-page p {
+      font-size: 1.2rem;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+
+    /* Seções */
+    section {
+      padding: 80px 20px;
+      border-bottom: 2px solid #e70012;
+      background: white;
+    }
+    section:last-child {
+      border-bottom: none;
+    }
+    section h2 {
+      font-size: 2.8rem;
+      color: #e70012;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .content-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .content-row:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+    .text-side {
+      flex: 1 1 400px;
+      text-align: left;
+    }
+    .text-side h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #e70012;
+    }
+    .text-side p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #222;
+    }
+    .image-side {
+      flex: 1 1 400px;
+    }
+    .image-side img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    /* Fundadores */
+    .fundadores {
+      display: flex;
+      gap: 50px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .fundador {
+      width: 260px;
+      text-align: center;
+    }
+    .fundador img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #e70012;
+      margin-bottom: 15px;
+    }
+    .fundador h3 {
+      font-size: 1.5rem;
+      color: #e70012;
+    }
+    .fundador p {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    /* Catálogo */
+    .catalogo-container {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .catalogo-image {
+      flex: 1 1 350px;
+    }
+    .catalogo-image img {
+      width: 100%;
+      border-radius: 20px;
+    }
+    .catalogo-text {
+      flex: 2 1 500px;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #111;
+    }
+
+    /* Parcerias */
+    .parcerias {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .parceria {
+      width: 200px;
+      text-align: center;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .parceria img {
+      max-width: 100%;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-wrap: wrap;
+      }
+      .content-row {
+        flex-direction: column !important;
+      }
+      .catalogo-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Intro -->
+  <section class="intro-screen" id="intro">
+    <img src="logo.png" alt="Logo Nintendo" class="logo" />
+    <button class="btn-conheca" onclick="document.getElementById('frontpage').scrollIntoView({behavior:'smooth'});">Nos conheça ↓</button>
+  </section>
+
+  <!-- Menu (fixo após scroll) -->
+  <header id="header">
+    <nav>
+      <a href="#sobre">Sobre Nós</a>
+      <a href="#fundadores">Fundadores</a>
+      <a href="#catalogo">Nosso Catálogo</a>
+      <a href="#politicas">Políticas</a>
+      <a href="#parcerias">Parcerias</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Front Page -->
+    <section class="front-page" id="frontpage">
+      <img src="placeholder.jpg" alt="Imagem de destaque" />
+      <h2>Placeholder</h2>
+      <p>Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder.</p>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre">
+      <h2>Sobre Nós</h2>
+      <div class="content-row">
+        <div class="text-side">
+          <h3>Placeholder</h3>
+          <p>Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder.</p>
+        </div>
+        <div class="image-side">
+          <img src="placeholder.jpg" alt="Sobre imagem" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Fundadores -->
+    <section id="fundadores">
+      <h2>Fundadores</h2>
+      <div class="fundadores">
+        <div class="fundador">
+          <img src="placeholder.jpg" alt="Foto do fundador Placeholder" />
+          <h3>Placeholder</h3>
+          <p>Placeholder Placeholder Placeholder Placeholder.</p>
+        </div>
+        <div class="fundador">
+          <img src="placeholder.jpg" alt="Foto da fundadora Placeholder" />
+          <h3>Placeholder</h3>
+          <p>Placeholder Placeholder Placeholder Placeholder.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catálogo -->
+    <section id="catalogo">
+      <h2>Nosso Catálogo</h2>
+      <div class="catalogo-container">
+        <div class="catalogo-image">
+          <img src="placeholder.jpg" alt="Catálogo imagem" />
+        </div>
+        <div class="catalogo-text">
+          <p>Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Políticas -->
+    <section id="politicas">
+      <h2>Nossas Políticas</h2>
+      <p style="text-align: center;">Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder.</p>
+    </section>
+
+    <!-- Parcerias -->
+    <section id="parcerias">
+      <h2>Nossas Parcerias</h2>
+      <div class="parcerias">
+        <div class="parceria">
+          <img src="placeholder.jpg" alt="Logo de parceria" />
+          <p>Placeholder Placeholder.</p>
+        </div>
+        <div class="parceria">
+          <img src="placeholder.jpg" alt="Logo de parceria" />
+          <p>Placeholder Placeholder.</p>
+        </div>
+        <div class="parceria">
+          <img src="placeholder.jpg" alt="Logo de parceria" />
+          <p>Placeholder Placeholder.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const header = document.getElementById('header');
+
+    // Mostrar header ao scrollar
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('visible', window.scrollY > window.innerHeight - 80);
+
+      // Menu ativo
+      const sections = document.querySelectorAll('main section[id]');
+      const navLinks = document.querySelectorAll('nav a');
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
